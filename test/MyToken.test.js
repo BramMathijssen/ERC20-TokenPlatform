@@ -10,21 +10,25 @@ chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
-contract("Token Test", async(accounts) =>{
+contract("Token Test", function(accounts) {
 
     // manier om accounts netjes te definen, javascript zorgt automatisch dat
     // deployerAccount = account 0, recipient = account 1, anotherAccount =2 ..etc.
     const [deployerAccount, recipient, anotherAccount] = accounts;
 
+    beforeEach(async () => {
+        this.myToken = await Token.new(1000);
+        });
+
     it("All tokens should be in my account", async() => {
-        let instance = await Token.deployed();
+        let instance = this.myToken;
         let totalSupply = await instance.totalSupply();
         expect(instance.balanceOf(deployerAccount)).to.eventually.be.a.bignumber.equal(totalSupply);
     }),
 
     it("I can send tokens from Account 1 to Account 2", async () => {
         const sendTokens = 1;
-        let instance = await Token.deployed();
+        let instance = this.myToken;
         let totalSupply = await instance.totalSupply();
         expect(instance.balanceOf(deployerAccount)).to.eventually.be.a.bignumber.equal(totalSupply);
         expect(instance.transfer(recipient, sendTokens)).to.eventually.be.fulfilled;      
@@ -33,7 +37,7 @@ contract("Token Test", async(accounts) =>{
       }),
 
     it("It's not possible to send more tokens than account 1 has", async () => {
-        let instance = await Token.deployed();
+        let instance = this.myToken;
         let balanceOfAccount = await instance.balanceOf(deployerAccount);
   
         expect(instance.transfer(recipient, new BN(balanceOfAccount+1))).to.eventually.be.rejected;
