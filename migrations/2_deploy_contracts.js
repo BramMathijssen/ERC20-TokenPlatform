@@ -1,5 +1,6 @@
 var MyToken = artifacts.require("MyToken.sol");
 var MyTokenSale = artifacts.require("./MyTokenSale.sol");
+var KycContract = artifacts.require("./KycContract.sol");
 require('dotenv').config({ path: '../.env' });
 
 module.exports = async function (deployer) {
