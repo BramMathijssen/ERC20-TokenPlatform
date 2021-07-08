@@ -4,8 +4,8 @@ import "./Crowdsale.sol";
 import "./KycContract.sol";
 
 contract MyTokenSale is Crowdsale {
-
     KycContract kyc;
+
     constructor(
         uint256 rate, // rate in TKNbits
         address payable wallet,
@@ -15,8 +15,15 @@ contract MyTokenSale is Crowdsale {
         kyc = _kyc;
     }
 
-    function _preValidatePurchase(address beneficiary, uint256 weiAmount) internal view override {
+    function _preValidatePurchase(address beneficiary, uint256 weiAmount)
+        internal
+        view
+        override
+    {
         super._preValidatePurchase(beneficiary, weiAmount);
-        require(kyc.kycCompleted(beneficiary), "KYC not completed yet, aborting");
+        require(
+            kyc.kycCompleted(beneficiary),
+            "KYC not completed yet, aborting"
+        );
     }
 }
